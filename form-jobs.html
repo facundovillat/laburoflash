@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/jobs.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Formulario de Trabajos</title>
+</head>
+<body>
+    
+    <header>
+        <i class='bx bxs-home-alt-2 bx-lg' onclick="window.location.href='index.php'"></i>
+    </header>
+
+    <h1 class="title-form">FORMULARIO DE TRABAJOS</h1>
+
+    <form id="jobForm" class="form-jobs">
+        
+        <div id="alert" class="alert" style="display: none;"></div>
+        
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" name="title" id="title" placeholder="Ingrese Titulo" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea name="description" id="description" placeholder="Describa su trabajo" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="category_id">Category ID</label>
+            <select name="category_id" id="category_id" required>
+                <option value="">Seleccione Categoria</option>
+                <option value="1">Cortar pasto</option>
+                <option value="2">Limpieza</option>
+                <option value="3">Pasear mascotas</option>
+                <option value="4">Lavado de auto</option>
+                <option value="5">Otros</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="location_id">Location ID</label>
+            <select name="location_id" id="location_id" required>
+                <option value="">Ingrese Localidad</option>
+                <option value="1">Ciudad de Buenos Aires</option>
+                <option value="2">Provincia de Buenos Aires</option>
+                <option value="3">La plata</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="address_text">Address Text</label>
+            <input type="text" name="address_text" id="address_text" placeholder="Ingrese dirección" required>
+        </div>
+
+        <div class="form-group">
+            <label for="duration_hours">Duracion Horas</label>
+            <input type="number" name="duration_hours" id="duration_hours" placeholder="Ingrese duración aproximada del Trabajo" step="0.5" min="0.5" max="24" required>
+        </div>
+
+        <div class="form-group">
+            <label for="sub_categories_id">Sub-Categorias ID</label>
+            <select name="sub_categories_id" id="sub_categories_id" required>
+                <option value="">Ingrese Sub-categorias</option>
+                <option value="1">Jardinería</option>
+                <option value="2">Mantenimiento</option>
+                <option value="3">Reparaciones</option>
+                <option value="4">Organización</option>
+                <option value="5">Otros servicios</option>
+            </select>
+        </div>
+
+        <div class="form-group checkbox-group">
+            <input type="checkbox" name="terms_conditions" id="terms_conditions" required>
+            <label for="terms_conditions">Al publicar su trabajo acepta nuestros Terminos y Condiciones</label>
+        </div>
+
+        <input type="submit" name="submit" value="Enviar Trabajo">
+
+    </form>
+
+    <footer>
+        <div class="container-footer-information f1">
+            <dl>
+                <dt>titulo</dt>
+                <hr>
+                <dd>elemento 1</dd>
+                <dd>elemento 2</dd>
+                <dd>elemento 3</dd>
+                <dd>elemento 4</dd>
+            </dl>
+        </div>
+
+        <div class="container-footer-information f2">
+            <dl>
+                <dt>titulo</dt>
+                <hr>
+                <dd>elemento 1</dd>
+                <dd>elemento 2</dd>
+            </dl>
+        </div>
+
+        <div class="container-footer-networks f3">
+            <dl>
+                <dt>REDES</dt>
+                <hr>
+                <div class="container-networks-icons">
+                    <i class='bx bxl-instagram'></i>
+                    <i class='bx bxl-discord-alt'></i>
+                    <i class='bx bxl-facebook'></i>
+                    <i class='bx bx-link-alt'></i>
+                </div>
+            </dl>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('jobForm');
+            
+            if (form) {
+                form.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+                    const alertDiv = document.getElementById('alert');
+                    const submitBtn = this.querySelector('input[type="submit"]');
+
+                    if (alertDiv) {
+                        alertDiv.style.display = 'none';
+                    }
+                    
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.value = 'Publicando...';
+                    }
+
+                    try {
+                        const response = await fetch('php/jobs.php', {
+                            method: 'POST',
+                            body: formData,
+                            credentials: 'same-origin',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+
+                        const contentType = response.headers.get("content-type");
+                        if (contentType && contentType.includes("application/json")) {
+                            const data = await response.json();
+
+                            if (alertDiv) {
+                                alertDiv.textContent = data.message;
+                                alertDiv.className = 'alert ' + (data.success ? 'alert-success' : 'alert-error');
+                                alertDiv.style.display = 'block';
+                            }
+
+                            if (data.success) {
+                                setTimeout(() => {
+                                    window.location.href = 'jobs.php';
+                                }, 1500);
+                            } else {
+                                if (submitBtn) {
+                                    submitBtn.disabled = false;
+                                    submitBtn.value = 'Enviar Trabajo';
+                                }
+                            }
+                        } else {
+                            throw new Error('Respuesta no válida del servidor');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        if (alertDiv) {
+                            alertDiv.textContent = 'Error de conexión. Por favor intenta nuevamente.';
+                            alertDiv.className = 'alert alert-error';
+                            alertDiv.style.display = 'block';
+                        }
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.value = 'Enviar Trabajo';
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>

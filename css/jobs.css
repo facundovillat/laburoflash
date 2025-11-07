@@ -1,0 +1,433 @@
+/* ESTILOS ESPECÍFICOS PARA FORMULARIO DE TRABAJOS */
+
+.title-form {
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 7px;
+    font-size: 40px;
+    margin: 50px 0 30px;
+    font-family: 'Fjalla One', sans-serif;
+    color: #333;
+}
+
+.form-jobs {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 2px solid rgba(43, 43, 43, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="number"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #007bff;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+
+.form-group textarea {
+    height: 120px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.form-group select {
+    cursor: pointer;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin: 25px 0;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+
+.checkbox-group label {
+    margin-bottom: 0;
+    font-size: 14px;
+    text-transform: none;
+    letter-spacing: normal;
+    cursor: pointer;
+}
+
+.form-jobs input[type="submit"] {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.form-jobs input[type="submit"]:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+
+.form-jobs input[type="submit"]:active {
+    transform: translateY(0);
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    .form-jobs {
+        margin: 20px;
+        padding: 20px;
+    }
+    
+    .title-form {
+        font-size: 30px;
+        letter-spacing: 4px;
+    }
+    
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group select,
+    .form-group textarea {
+        padding: 12px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-jobs {
+        margin: 10px;
+        padding: 15px;
+    }
+    
+    .title-form {
+        font-size: 24px;
+        letter-spacing: 2px;
+    }
+}
+
+/* ESTILOS PARA LAS TARJETAS DE TRABAJOS SEGÚN EL BOCETO */
+
+/* Estilos para las tarjetas de trabajos */
+.jobs-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    margin: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.jobs-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Sección de imagen */
+.job-image {
+    width: 100%;
+    height: 200px;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.job-image i {
+    font-size: 60px;
+    color: #999;
+}
+
+/* Sección de título */
+.job-title {
+    padding: 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.job-title p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    text-align: center;
+    line-height: 1.3;
+}
+
+/* Sección de acciones */
+.job-actions {
+    padding: 15px;
+    background: white;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.view-details-btn, .take-job-btn {
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    background: white;
+    color: #333;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    flex: 1;
+}
+
+.view-details-btn:hover {
+    background: #f8f9fa;
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.take-job-btn:hover:not(:disabled) {
+    background: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.take-job-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #6c757d;
+    border-color: #6c757d;
+    color: white;
+}
+
+.take-job-btn.applied {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    border: none;
+    color: white;
+    cursor: default;
+}
+
+/* Grid para mostrar 4 tarjetas por fila */
+#jobs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Responsive para móviles */
+@media (max-width: 1024px) {
+    #jobs {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    #jobs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    #jobs {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ALERTAS PARA FORMULARIO */
+.alert{
+    padding: 15px;
+    margin: 10px auto;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    animation: slideDown 0.3s ease-out;
+}
+
+.alert-success{
+    background-color: #4CAF50;
+    color: #fff;
+    border: 2px solid #45a049;
+}
+
+.alert-error{
+    background-color: #f44336;
+    color: #fff;
+    border: 2px solid #da190b;
+}
+
+@keyframes slideDown{
+    0%{
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100%{
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos adicionales para el modal mejorado */
+.job-details-section {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #2196F3;
+}
+
+.job-details-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.job-details-section h3 i {
+    font-size: 20px;
+    color: #2196F3;
+}
+
+.job-details-section p {
+    margin: 10px 0;
+    line-height: 1.6;
+    color: #555;
+}
+
+.request-form {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 2px dashed #2196F3;
+}
+
+.request-form h3 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.request-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+}
+
+.request-form textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+}
+
+.request-form textarea:focus {
+    outline: none;
+    border-color: #2196F3;
+    box-shadow: 0 0 5px rgba(33, 150, 243, 0.2);
+}
+
+.request-form small {
+    color: #666;
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
+}
+
+.job-info {
+    margin: 10px 0;
+    font-size: 14px;
+    color: #666;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 5px;
+}
+
+.job-info p {
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.job-info i {
+    font-size: 16px;
+    color: #666;
+    width: 20px;
+}
+
+/* Mejoras en las tarjetas de trabajos */
+.jobs-card {
+    transition: all 0.3s ease;
+}
+
+.jobs-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.job-title small {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #666;
+    font-weight: normal;
+}

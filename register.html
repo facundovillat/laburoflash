@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Registráte</title>
+</head>
+
+<body>
+
+    <header>
+        <i class='bx bxs-home-alt-2 bx-lg'  onclick="window.location.href='index.html'"></i>
+
+    </header>
+
+    <form id="registerForm">
+
+        <div id="alert" class="alert" style="display: none;"></div>
+
+        <input type="text" name="name" id="name" placeholder="Nombre" autocomplete="off" required>
+
+        <input type="text" name="last_name" id="last_name" placeholder="Apellido" autocomplete="off" required>
+
+        <input type="email" name="email" id="email" placeholder="Correo Electrónico" autocomplete="off" required>
+
+        <input type="password" name="password" id="password" placeholder="Contraseña" autocomplete="off" required>
+
+        <input type="password" name="v_password" id="v_password" placeholder="Verificar Contraseña" autocomplete="off" required>
+
+        <input type="number" name="phone_number" id="phone_number" placeholder="Numero de Telefono" autocomplete="off" required>
+
+        <input type="submit" name="submit" value="Registráte" required>
+        <p>¿Ya tenés cuenta? <a href="login.html" class="links">Iniciá Sesión</a>.</p>
+
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registerForm');
+            
+            if (form) {
+                form.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+                    const alertDiv = document.getElementById('alert');
+                    const submitBtn = this.querySelector('input[type="submit"]');
+
+                    if (alertDiv) {
+                        alertDiv.style.display = 'none';
+                    }
+                    
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.value = 'Registrando...';
+                    }
+
+                    try {
+                        const response = await fetch('php/register.php', {
+                            method: 'POST',
+                            body: formData,
+                            credentials: 'same-origin',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+
+                        const contentType = response.headers.get("content-type");
+                        if (contentType && contentType.includes("application/json")) {
+                            const data = await response.json();
+
+                            if (alertDiv) {
+                                alertDiv.textContent = data.message;
+                                alertDiv.className = 'alert ' + (data.success ? 'alert-success' : 'alert-error');
+                                alertDiv.style.display = 'block';
+                            }
+
+                            if (data.success) {
+                                window.location.href = 'index.php';
+                                return;
+                            } else {
+                                if (submitBtn) {
+                                    submitBtn.disabled = false;
+                                    submitBtn.value = 'Registráte';
+                                }
+                            }
+                        } else {
+                            const text = await response.text();
+                            if (text.includes('success') || text.includes('exitoso') || response.ok) {
+                                window.location.href = 'index.php';
+                                return;
+                            }
+                            throw new Error('Respuesta no válida del servidor');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        if (alertDiv) {
+                            alertDiv.textContent = 'Error de conexión. Por favor intenta nuevamente.';
+                            alertDiv.className = 'alert alert-error';
+                            alertDiv.style.display = 'block';
+                        }
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.value = 'Registráte';
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+
+    <footer>
+        <div class="container-footer-information f1">
+
+            <dl>
+
+                <dt>titulo</dt>
+                <hr>
+
+                <dd>elemento 1</dd>
+                <dd>elemento 2</dd>
+                <dd>elemento 3</dd>
+                <dd>elemento 4</dd>
+
+            </dl>
+
+        </div>
+        <div class="container-footer-information f2">
+
+            <dl>
+
+                <dt>titulo</dt>
+                <hr>
+
+                <dd>elemento 1</dd>
+                <dd>elemento 2</dd>
+
+            </dl>
+
+        </div>
+        <div class="container-footer-networks f3">
+
+            <dl>
+
+                <dt>REDES</dt>
+                <hr>
+
+                <div class="container-networks-icons">
+
+                    <i class='bx bxl-instagram'></i>
+                    <i class='bx bxl-discord-alt'></i>
+                    <i class='bx bxl-facebook'></i>
+                    <i class='bx bx-link-alt'></i>
+
+                </div>
+
+            </dl>
+
+        </div>
+
+    </footer>
+
+</body>
+
+</html>
