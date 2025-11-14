@@ -1,6 +1,6 @@
 <?php
-include "php/session_check.php";
-include "php/connection.php";
+include "php/verificar_sesion.php";
+include "php/conexion.php";
 
 $sql = "SELECT t.*, tc.name as category_name, sc.name as subcategory_name, l.city, l.province 
         FROM tasks t 
@@ -156,7 +156,7 @@ async function takeJobFromModal(jobId, message = '') {
             formData.append('message', message);
         }
         
-        const response = await fetch('php/take_job.php', {
+        const response = await fetch('php/trabajos.php?accion=postular', {
             method: 'POST',
             body: formData,
             credentials: 'same-origin',
@@ -319,7 +319,7 @@ async function viewDetails(jobId) {
     modalBody.innerHTML = '<p>Cargando detalles...</p>';
     
     try {
-        const response = await fetch(`php/get_job_details.php?task_id=${jobId}`, {
+        const response = await fetch(`php/trabajos.php?accion=detalle&task_id=${jobId}`, {
             credentials: 'same-origin'
         });
         
@@ -378,22 +378,15 @@ async function viewDetails(jobId) {
                 </div>
                 
                 <div class="job-details-section" style="background: #f5f5f5; border-left: 4px solid #2196F3;">
-                    <h3><i class='bx bx-user'></i> Información del Empleador</h3>
+                    <h3><i class='bx bx-user'></i> Información del empleador</h3>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                         <div>
                             <strong style="color: #666; display: block; margin-bottom: 5px;">Nombre:</strong>
                             <span>${job.employer_name || ''} ${job.employer_last_name || ''}</span>
                         </div>
-                        <div>
-                            <strong style="color: #666; display: block; margin-bottom: 5px;">Email:</strong>
-                            <a href="mailto:${job.employer_email || ''}" style="color: #2196F3; text-decoration: none;">${job.employer_email || 'No disponible'}</a>
+                        <div style="grid-column: 1/-1;">
+                            <p style="margin: 0; color: #666;">Los datos de contacto del empleador se habilitan cuando seas seleccionado para el trabajo.</p>
                         </div>
-                        ${job.employer_phone ? `
-                        <div>
-                            <strong style="color: #666; display: block; margin-bottom: 5px;">Teléfono:</strong>
-                            <a href="tel:${job.employer_phone}" style="color: #2196F3; text-decoration: none;">${job.employer_phone}</a>
-                        </div>
-                        ` : ''}
                     </div>
                 </div>
             `;

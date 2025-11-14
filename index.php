@@ -1,5 +1,5 @@
 <?php
-include "php/session_check.php";
+include "php/verificar_sesion.php";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -23,7 +23,7 @@ include "php/session_check.php";
             <span>Bienvenido, <?php echo htmlspecialchars($_SESSION["user_name"] ?? "Usuario"); ?>!</span>
             <a id="button-login" href="employer_dashboard.php" style="margin-right: 10px;">Panel Empleador</a>
             <a id="button-login" href="worker_dashboard.php" style="margin-right: 10px;">Panel Trabajador</a>
-            <a id="button-login" href="php/logout.php">Cerrar Sesión</a>
+            <a id="button-login" href="php/autenticacion.php?accion=cerrar_sesion">Cerrar Sesión</a>
         </div>
         
     </header>
@@ -45,16 +45,12 @@ include "php/session_check.php";
             <div class="information-card i1">
 
                 <div class="container-img">
-                    <img src="img/prueba-3.webp" alt="img">
+                    <img src="img/banner-1.jpg" alt="img">
                 </div>
 
-                <p class="information-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia esse qui sequi! 
-                    Nisi adipisci qui culpa ipsum debitis libero consequuntur earum officia quaerat velit id, 
-                    eius molestiae? Facere, labore iste. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia esse qui sequi! 
-                    Nisi adipisci qui culpa ipsum debitis libero consequuntur earum officia quaerat velit id, 
-                    eius molestiae? Facere, labore iste. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia esse qui sequi! 
-                    Nisi adipisci qui culpa ipsum debitis libero consequuntur earum officia quaerat velit id, 
-                    eius molestiae? Facere, labore iste.
+                <p class="information-text">LaburoFlash conecta empleadores y trabajadores de forma rápida y segura. 
+                    Publicá oportunidades o postulá en minutos, con perfiles verificados y calificaciones 
+                    para decidir mejor.
                 </p>
 
             </div>
@@ -62,17 +58,24 @@ include "php/session_check.php";
             <div class="information-card i2">
 
                 <div class="container-img">
-                    <img src="img/prueba-3.webp" alt="img">
+                    <img src="img/banner-2.jpg" alt="img">
                 </div>
 
-                <p class="information-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia esse qui sequi! 
-                    Nisi adipisci qui culpa ipsum debitis libero consequuntur earum officia quaerat velit id, 
-                    eius molestiae? Facere, labore iste. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia esse qui sequi! 
-                    Nisi adipisci qui culpa ipsum debitis libero consequuntur earum officia quaerat velit id, 
-                    eius molestiae? Facere, labore iste. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia esse qui sequi! 
-                    Nisi adipisci qui culpa ipsum debitis libero consequuntur earum officia quaerat velit id, 
-                    eius molestiae? Facere, labore iste.
+                <p class="information-text">Ofrecemos herramientas simples para gestionar trabajos: publicación guiada, 
+                    filtros por oficio y zona, mensajería directa y presupuestos, todo en un solo lugar.
                 </p>
+
+            </div>
+
+            <div class="information-card i3">
+
+                <div class="container-img">
+                    <img src="img/banner-3.jpg" alt="img">
+                </div>
+
+                <p class="information-text">Reputación y reseñas, panel de empleador y trabajador, 
+                    soporte y protección de datos.
+                </p>        
 
             </div>
 

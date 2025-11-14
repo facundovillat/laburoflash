@@ -1,5 +1,5 @@
 <?php
-include "php/session_check.php";
+include "php/verificar_sesion.php";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -23,9 +23,10 @@ include "php/session_check.php";
             align-items: center;
             margin-bottom: 30px;
             padding: 20px;
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            background: #fff;
+            border: 1px solid #000;
             border-radius: 10px;
-            color: white;
+            color: #000;
         }
         
         .dashboard-tabs {
@@ -48,8 +49,8 @@ include "php/session_check.php";
         }
         
         .tab-btn.active {
-            color: #11998e;
-            border-bottom-color: #11998e;
+            color: #000;
+            border-bottom-color: #000;
         }
         
         .tab-content {
@@ -66,7 +67,7 @@ include "php/session_check.php";
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: none;
         }
         
         .job-card-header {
@@ -97,22 +98,23 @@ include "php/session_check.php";
         
         .btn-complete {
             padding: 10px 20px;
-            border: none;
+            border: 1px solid #000;
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s;
-            background: #4caf50;
-            color: white;
+            background: #fff;
+            color: #000;
         }
         
         .btn-complete:hover {
-            background: #45a049;
+            background: #000;
+            color: #fff;
         }
         
         .contact-info {
-            background: #e3f2fd;
-            border: 1px solid #2196f3;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
             border-radius: 8px;
             padding: 15px;
             margin-top: 15px;
@@ -120,7 +122,7 @@ include "php/session_check.php";
         
         .contact-info h4 {
             margin: 0 0 10px 0;
-            color: #1976d2;
+            color: #000;
         }
         
         .contact-info p {
@@ -130,14 +132,14 @@ include "php/session_check.php";
         
         .contact-info i {
             margin-right: 8px;
-            color: #2196f3;
+            color: #000;
         }
     </style>
 </head>
 <body>
     <header>
         <i class='bx bxs-home-alt-2 bx-lg' onclick="window.location.href='index.php'"></i>
-        <i class='bx bx-log-out bx-lg' onclick="window.location.href='php/logout.php'" style="float: right; margin-right: 20px; cursor: pointer;"></i>
+        <i class='bx bx-log-out bx-lg' onclick="window.location.href='php/autenticacion.php?accion=cerrar_sesion'" style="float: right; margin-right: 20px; cursor: pointer;"></i>
     </header>
     
     <div class="dashboard-container">
@@ -146,9 +148,13 @@ include "php/session_check.php";
                 <h1>Panel del Trabajador</h1>
                 <p>Bienvenido, <?php echo htmlspecialchars($_SESSION["user_name"] ?? "Usuario"); ?>!</p>
             </div>
-            <a href="jobs.php" style="background: white; color: #11998e; padding: 12px 24px; border-radius: 5px; text-decoration: none; font-weight: bold;">
-                <i class='bx bx-search'></i> Buscar Trabajos
+            <a href="jobs.php" style="background: white; color: #000; padding: 12px 24px; border: 1px solid #000; border-radius: 5px; text-decoration: none; font-weight: bold;">
+                <i class='bx bx-search'></i> Buscar trabajos
             </a>
+        </div>
+        <div style="background: #fff; border: 1px solid #000; border-radius: 10px; padding: 15px; margin-bottom: 20px;">
+            <p style="margin: 0 0 10px 0; font-weight: bold;">Guía rápida</p>
+            <p style="margin: 5px 0;">1) Buscá y solicitá. 2) Esperá la selección. 3) Coordiná con el empleador. 4) Completá y marcá como terminado.</p>
         </div>
         
         <div class="dashboard-tabs">
@@ -196,7 +202,7 @@ include "php/session_check.php";
         
         async function loadRequests() {
             try {
-                const response = await fetch('php/get_worker_jobs.php', {
+                const response = await fetch('php/trabajos.php?accion=mis_trabajos_trabajador', {
                     credentials: 'same-origin'
                 });
                 const data = await response.json();
@@ -242,7 +248,7 @@ include "php/session_check.php";
         
         async function loadAssigned() {
             try {
-                const response = await fetch('php/get_worker_jobs.php', {
+                const response = await fetch('php/trabajos.php?accion=mis_trabajos_trabajador', {
                     credentials: 'same-origin'
                 });
                 const data = await response.json();
@@ -281,25 +287,26 @@ include "php/session_check.php";
                                 <p>${job.description}</p>
                                 <p style="font-size: 12px; color: #999;">Asignado: ${new Date(job.assigned_at).toLocaleString()}</p>
                                 ${isPending ? `
-                                <div style="background: #fff3e0; border: 1px solid #ff9800; border-radius: 8px; padding: 15px; margin-top: 15px;">
-                                    <h4 style="color: #f57c00; margin: 0 0 10px 0;">⏳ Esperando Confirmación</h4>
+                                <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-top: 15px;">
+                                    <h4 style="color: #000; margin: 0 0 10px 0;">Esperando confirmación</h4>
                                     <p style="margin: 5px 0;">Has marcado este trabajo como completado. El empleador debe confirmar.</p>
                                     ${job.completed_at ? `<p style="font-size: 12px; color: #666;">Completado el: ${new Date(job.completed_at).toLocaleString()}</p>` : ''}
                                 </div>
                                 ` : ''}
                                 ${isDisputed ? `
-                                <div style="background: #ffebee; border: 1px solid #f44336; border-radius: 8px; padding: 15px; margin-top: 15px;">
-                                    <h4 style="color: #c62828; margin: 0 0 10px 0;">⚠️ Proceso de Verificación</h4>
+                                <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-top: 15px;">
+                                    <h4 style="color: #000; margin: 0 0 10px 0;">Proceso de verificación</h4>
                                     <p style="margin: 5px 0;">El empleador ha rechazado la finalización. Hay un proceso de verificación activo.</p>
-                                    <button class="btn-chat" onclick="viewDispute(${job.task_id})" style="margin-top: 10px; background: #f44336;">Ver Disputa</button>
+                                    <button class="btn-chat" onclick="viewDispute(${job.task_id})" style="margin-top: 10px;">Ver disputa</button>
                                 </div>
                                 ` : ''}
                                 ${job.assignment_status === 'assigned' || job.assignment_status === 'in_progress' ? `
                                 <div class="contact-info">
-                                    <h4>📞 Información de Contacto del Empleador</h4>
+                                    <h4>Información de contacto del empleador</h4>
                                     <p><i class='bx bx-user'></i><strong>Nombre:</strong> ${job.employer_name || ''} ${job.employer_last_name || ''}</p>
                                     <p><i class='bx bx-envelope'></i><strong>Email:</strong> <a href="mailto:${job.employer_email || ''}" style="color: #1976d2; text-decoration: none; font-weight: bold;">${job.employer_email || 'No disponible'}</a></p>
                                     ${job.employer_phone ? `<p><i class='bx bx-phone'></i><strong>Teléfono:</strong> <a href="tel:${job.employer_phone}" style="color: #1976d2; text-decoration: none; font-weight: bold;">${job.employer_phone}</a></p>` : '<p style="color: #999; font-style: italic;">Teléfono no disponible</p>'}
+                                    <p style="margin-top: 10px; color: #666;">Tip: acordá fecha, lugar y alcance por email o teléfono antes de empezar.</p>
                                 </div>
                                 ` : ''}
                                 ${!isPending && !isDisputed ? `
@@ -318,7 +325,7 @@ include "php/session_check.php";
         
         async function loadCompleted() {
             try {
-                const response = await fetch('php/get_worker_jobs.php', {
+                const response = await fetch('php/trabajos.php?accion=mis_trabajos_trabajador', {
                     credentials: 'same-origin'
                 });
                 const data = await response.json();
@@ -364,7 +371,7 @@ include "php/session_check.php";
                 const formData = new FormData();
                 formData.append('task_id', taskId);
                 
-                const response = await fetch('php/complete_job.php', {
+                const response = await fetch('php/trabajos.php?accion=marcar_completado', {
                     method: 'POST',
                     body: formData,
                     credentials: 'same-origin',
@@ -389,7 +396,7 @@ include "php/session_check.php";
         
         async function viewDispute(taskId) {
             try {
-                const response = await fetch(`php/get_dispute.php?task_id=${taskId}`, {
+                const response = await fetch(`php/trabajos.php?accion=ver_disputa&task_id=${taskId}`, {
                     credentials: 'same-origin'
                 });
                 const data = await response.json();
@@ -420,11 +427,11 @@ include "php/session_check.php";
                             <div style="margin-top: 20px;">
                                 <h4>Agregar Mensaje:</h4>
                                 <textarea id="dispute-message" placeholder="Escribe tu argumento..." style="width: 100%; min-height: 100px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin: 10px 0;"></textarea>
-                                <button class="btn-chat" onclick="addDisputeMessage(${taskId})" style="background: #2196f3;">Enviar Mensaje</button>
+                                <button class="btn-chat" onclick="addDisputeMessage(${taskId})">Enviar mensaje</button>
                             </div>
-                            <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
-                                <p><strong>💡 Consejo:</strong> Contacta al empleador directamente mediante email o teléfono para resolver la disputa más rápidamente.</p>
-                            </div>
+                                <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                                <p><strong>Consejo:</strong> Contactá al empleador por email o teléfono para resolver la disputa más rápido.</p>
+                                </div>
                         </div>
                     `;
                     document.body.appendChild(modal);
@@ -450,7 +457,7 @@ include "php/session_check.php";
                 formData.append('task_id', taskId);
                 formData.append('message', message);
                 
-                const response = await fetch('php/add_dispute_message.php', {
+                const response = await fetch('php/trabajos.php?accion=agregar_mensaje_disputa', {
                     method: 'POST',
                     body: formData,
                     credentials: 'same-origin',
@@ -476,7 +483,7 @@ include "php/session_check.php";
         
         async function loadSubscription() {
             try {
-                const response = await fetch('php/get_subscription_info.php', {
+                const response = await fetch('php/trabajos.php?accion=info_suscripcion', {
                     credentials: 'same-origin'
                 });
                 const data = await response.json();
@@ -490,25 +497,23 @@ include "php/session_check.php";
                         const expiresDate = new Date(sub.expires_at);
                         const isActive = sub.status === 'active';
                         const statusText = isActive ? 'Activa' : 'Cancelada';
-                        const statusColor = isActive ? '#4caf50' : '#ff9800';
-                        const headerBg = isActive 
-                            ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' 
-                            : 'linear-gradient(135deg, #ff9800 0%, #f57c00 100%)';
+                        const statusColor = isActive ? '#000' : '#000';
+                        const headerBg = '#fff';
                         const headerTitle = isActive 
-                            ? '✨ Suscripción Premium Activa' 
-                            : '⚠️ Suscripción Cancelada (Válida hasta vencimiento)';
+                            ? 'Suscripción Premium activa' 
+                            : 'Suscripción cancelada (válida hasta vencimiento)';
                         const headerSubtitle = isActive 
-                            ? 'Puedes tomar trabajos sin límite' 
-                            : 'Podrás usar los beneficios hasta la fecha de vencimiento';
+                            ? 'Podés tomar trabajos sin límite' 
+                            : 'Usá los beneficios hasta la fecha de vencimiento';
                         
                         container.innerHTML = `
-                            <div style="background: ${headerBg}; color: white; padding: 30px; border-radius: 10px; margin-bottom: 20px;">
+                            <div style="background: ${headerBg}; color: #000; padding: 30px; border: 1px solid #000; border-radius: 10px; margin-bottom: 20px;">
                                 <h2 style="margin: 0 0 10px 0;">${headerTitle}</h2>
                                 <p style="margin: 5px 0; font-size: 18px;">${headerSubtitle}</p>
                             </div>
                             
                             <div class="job-card-dashboard">
-                                <h3>📋 Información de tu Suscripción</h3>
+                                <h3>Información de tu suscripción</h3>
                                 <div style="margin: 20px 0;">
                                     <p><strong>Plan:</strong> Premium Trabajador</p>
                                     <p><strong>Estado:</strong> <span style="color: ${statusColor}; font-weight: bold;">${statusText}</span></p>
@@ -536,49 +541,49 @@ include "php/session_check.php";
                             </div>
                             
                             <div class="job-card-dashboard" style="background: #e8f5e9; border: 2px solid #4caf50;">
-                                <h3>✅ Beneficios de tu Suscripción</h3>
+                                <h3>Beneficios de tu suscripción</h3>
                                 <ul style="line-height: 2;">
-                                    <li>✅ Trabajos ilimitados sin restricciones</li>
-                                    <li>✅ Sin límite de solicitudes cada 5 días</li>
-                                    <li>✅ Acceso completo a todas las funciones</li>
+                                    <li>Trabajos ilimitados sin restricciones</li>
+                                    <li>Sin límite de solicitudes cada 5 días</li>
+                                    <li>Acceso completo a todas las funciones</li>
                                 </ul>
                             </div>
                         `;
                     } else {
                         container.innerHTML = `
-                            <div style="background: #fff3e0; border: 2px solid #ff9800; padding: 30px; border-radius: 10px; margin-bottom: 20px;">
-                                <h2 style="margin: 0 0 10px 0; color: #f57c00;">⚠️ Sin Suscripción Activa</h2>
+                            <div style="background: #f8f9fa; border: 1px solid #ddd; padding: 30px; border-radius: 10px; margin-bottom: 20px;">
+                                <h2 style="margin: 0 0 10px 0; color: #000;">Sin suscripción activa</h2>
                                 <p style="margin: 5px 0; font-size: 16px;">Actualmente estás en el plan gratuito con límites</p>
                             </div>
                             
                             <div class="job-card-dashboard">
-                                <h3>📊 Tu Estado Actual</h3>
+                                <h3>Tu estado actual</h3>
                                 <div style="margin: 20px 0;">
                                     <p><strong>Trabajos tomados (últimos 5 días):</strong> ${stats.jobs_taken} de ${stats.limit}</p>
-                                    <p><strong>Trabajos restantes:</strong> <span style="color: ${stats.remaining === 0 ? '#f44336' : '#4caf50'}; font-weight: bold;">${stats.remaining}</span></p>
-                                    ${stats.remaining === 0 ? '<p style="color: #f44336; font-weight: bold;">⚠️ Has alcanzado el límite. Suscríbete para tomar más trabajos.</p>' : ''}
+                                    <p><strong>Trabajos restantes:</strong> <span style="color: #000; font-weight: bold;">${stats.remaining}</span></p>
+                                    ${stats.remaining === 0 ? '<p style="color: #000; font-weight: bold;">Alcanzaste el límite. Suscribite para tomar más trabajos.</p>' : ''}
                                 </div>
                             </div>
                             
-                            <div class="job-card-dashboard" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-                                <h2 style="margin: 0 0 20px 0;">🚀 Suscríbete a Premium</h2>
+                            <div class="job-card-dashboard" style="background: #fff; color: #000; border: 1px solid #000;">
+                                <h2 style="margin: 0 0 20px 0;">Suscribite a Premium</h2>
                                 <div style="margin: 20px 0;">
                                     <h3 style="font-size: 36px; margin: 10px 0;">$${data.subscription_price.toLocaleString('es-AR')} <span style="font-size: 18px;">ARS/mes</span></h3>
                                     <ul style="line-height: 2.5; margin: 20px 0;">
-                                        <li>✅ Trabajos ilimitados</li>
-                                        <li>✅ Sin restricciones de tiempo</li>
-                                        <li>✅ Acceso prioritario a nuevas ofertas</li>
-                                        <li>✅ Soporte prioritario</li>
+                                        <li>Trabajos ilimitados</li>
+                                        <li>Sin restricciones de tiempo</li>
+                                        <li>Acceso prioritario a nuevas ofertas</li>
+                                        <li>Soporte prioritario</li>
                                     </ul>
                                 </div>
-                                <button class="btn-complete" onclick="createSubscription()" style="background: white; color: #667eea; font-size: 18px; padding: 15px 40px;">
-                                    Suscribirme Ahora
+                                <button class="btn-complete" onclick="createSubscription()" style="font-size: 18px; padding: 15px 40px;">
+                                    Suscribirme ahora
                                 </button>
                                 <p style="margin-top: 15px; font-size: 12px; opacity: 0.9;">* La suscripción se renueva automáticamente cada mes</p>
                             </div>
                             
                             <div class="job-card-dashboard">
-                                <h3>💡 Plan Gratuito vs Premium</h3>
+                                <h3>Plan gratuito vs Premium</h3>
                                 <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
                                     <thead>
                                         <tr style="background: #f5f5f5;">
@@ -595,8 +600,8 @@ include "php/session_check.php";
                                         </tr>
                                         <tr>
                                             <td style="padding: 10px; border-bottom: 1px solid #eee;">Restricciones de tiempo</td>
-                                            <td style="padding: 10px; text-align: center; border-bottom: 1px solid #eee;">❌</td>
-                                            <td style="padding: 10px; text-align: center; border-bottom: 1px solid #eee; color: #4caf50; font-weight: bold;">✅</td>
+                                            <td style="padding: 10px; text-align: center; border-bottom: 1px solid #eee;">No</td>
+                                            <td style="padding: 10px; text-align: center; border-bottom: 1px solid #eee;">Sí</td>
                                         </tr>
                                         <tr>
                                             <td style="padding: 10px;">Soporte</td>
@@ -621,7 +626,7 @@ include "php/session_check.php";
             }
             
             try {
-                const response = await fetch('php/create_subscription.php', {
+                const response = await fetch('php/trabajos.php?accion=crear_suscripcion', {
                     method: 'POST',
                     credentials: 'same-origin',
                     headers: {
@@ -649,7 +654,7 @@ include "php/session_check.php";
             }
             
             try {
-                const response = await fetch('php/create_subscription.php', {
+                const response = await fetch('php/trabajos.php?accion=crear_suscripcion', {
                     method: 'POST',
                     credentials: 'same-origin',
                     headers: {
@@ -677,7 +682,7 @@ include "php/session_check.php";
             }
             
             try {
-                const response = await fetch('php/cancel_subscription.php', {
+                const response = await fetch('php/trabajos.php?accion=cancelar_suscripcion', {
                     method: 'POST',
                     credentials: 'same-origin',
                     headers: {

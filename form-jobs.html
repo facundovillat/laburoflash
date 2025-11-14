@@ -22,17 +22,17 @@
         <div id="alert" class="alert" style="display: none;"></div>
         
         <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" name="title" id="title" placeholder="Ingrese Titulo" required>
+            <label for="title">Título</label>
+            <input type="text" name="title" id="title" placeholder="Ingresá un título" required>
         </div>
 
         <div class="form-group">
-            <label for="description">Description</label>
-            <textarea name="description" id="description" placeholder="Describa su trabajo" required></textarea>
+            <label for="description">Descripción</label>
+            <textarea name="description" id="description" placeholder="Describí exactamente qué hay que hacer, con detalles. Indicá si tenés las herramientas o no." required></textarea>
         </div>
 
         <div class="form-group">
-            <label for="category_id">Category ID</label>
+            <label for="category_id">Categoría</label>
             <select name="category_id" id="category_id" required>
                 <option value="">Seleccione Categoria</option>
                 <option value="1">Cortar pasto</option>
@@ -44,7 +44,7 @@
         </div>
 
         <div class="form-group">
-            <label for="location_id">Location ID</label>
+            <label for="location_id">Localidad</label>
             <select name="location_id" id="location_id" required>
                 <option value="">Ingrese Localidad</option>
                 <option value="1">Ciudad de Buenos Aires</option>
@@ -54,17 +54,17 @@
         </div>
 
         <div class="form-group">
-            <label for="address_text">Address Text</label>
-            <input type="text" name="address_text" id="address_text" placeholder="Ingrese dirección" required>
+            <label for="address_text">Dirección</label>
+            <input type="text" name="address_text" id="address_text" placeholder="Ingresá dirección" required>
         </div>
 
         <div class="form-group">
-            <label for="duration_hours">Duracion Horas</label>
+            <label for="duration_hours">Duración estimada (horas)</label>
             <input type="number" name="duration_hours" id="duration_hours" placeholder="Ingrese duración aproximada del Trabajo" step="0.5" min="0.5" max="24" required>
         </div>
 
         <div class="form-group">
-            <label for="sub_categories_id">Sub-Categorias ID</label>
+            <label for="sub_categories_id">Sub-categoría</label>
             <select name="sub_categories_id" id="sub_categories_id" required>
                 <option value="">Ingrese Sub-categorias</option>
                 <option value="1">Jardinería</option>
@@ -141,7 +141,7 @@
                     }
 
                     try {
-                        const response = await fetch('php/jobs.php', {
+                        const response = await fetch('php/trabajos.php?accion=publicar_trabajo', {
                             method: 'POST',
                             body: formData,
                             credentials: 'same-origin',
@@ -151,27 +151,33 @@
                         });
 
                         const contentType = response.headers.get("content-type");
+                        let data;
                         if (contentType && contentType.includes("application/json")) {
-                            const data = await response.json();
-
-                            if (alertDiv) {
-                                alertDiv.textContent = data.message;
-                                alertDiv.className = 'alert ' + (data.success ? 'alert-success' : 'alert-error');
-                                alertDiv.style.display = 'block';
-                            }
-
-                            if (data.success) {
-                                setTimeout(() => {
-                                    window.location.href = 'jobs.php';
-                                }, 1500);
-                            } else {
-                                if (submitBtn) {
-                                    submitBtn.disabled = false;
-                                    submitBtn.value = 'Enviar Trabajo';
-                                }
-                            }
+                            data = await response.json();
                         } else {
-                            throw new Error('Respuesta no válida del servidor');
+                            const text = await response.text();
+                            try {
+                                data = JSON.parse(text);
+                            } catch (e) {
+                                throw new Error('Respuesta no válida del servidor');
+                            }
+                        }
+
+                        if (alertDiv) {
+                            alertDiv.textContent = data.message;
+                            alertDiv.className = 'alert ' + (data.success ? 'alert-success' : 'alert-error');
+                            alertDiv.style.display = 'block';
+                        }
+
+                        if (data.success) {
+                            setTimeout(() => {
+                                window.location.href = 'jobs.php';
+                            }, 1500);
+                        } else {
+                            if (submitBtn) {
+                                submitBtn.disabled = false;
+                                submitBtn.value = 'Enviar Trabajo';
+                            }
                         }
                     } catch (error) {
                         console.error('Error:', error);

@@ -60,7 +60,7 @@
                     }
 
                     try {
-                        const response = await fetch('php/register.php', {
+                        const response = await fetch('php/autenticacion.php?accion=registrar', {
                             method: 'POST',
                             body: formData,
                             credentials: 'same-origin',

@@ -1,5 +1,5 @@
 <?php
-include "php/session_check.php";
+include "php/verificar_sesion.php";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -23,9 +23,10 @@ include "php/session_check.php";
             align-items: center;
             margin-bottom: 30px;
             padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #fff;
+            border: 1px solid #000;
             border-radius: 10px;
-            color: white;
+            color: #000;
         }
         
         .dashboard-tabs {
@@ -48,8 +49,8 @@ include "php/session_check.php";
         }
         
         .tab-btn.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
+            color: #000;
+            border-bottom-color: #000;
         }
         
         .tab-content {
@@ -66,7 +67,7 @@ include "php/session_check.php";
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: none;
         }
         
         .job-card-header {
@@ -89,10 +90,10 @@ include "php/session_check.php";
         .status-completed { background: #e8f5e9; color: #388e3c; }
         
         .btn-chat {
-            background: #2196f3;
-            color: white;
+            background: #fff;
+            color: #000;
             padding: 8px 16px;
-            border: none;
+            border: 1px solid #000;
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
@@ -100,11 +101,12 @@ include "php/session_check.php";
         }
         
         .btn-chat:hover {
-            background: #0b7dda;
+            background: #000;
+            color: #fff;
         }
         
         .responses-badge {
-            background: #667eea;
+            background: #000;
             color: white;
             padding: 5px 10px;
             border-radius: 15px;
@@ -140,34 +142,23 @@ include "php/session_check.php";
         
         .btn-accept, .btn-reject {
             padding: 8px 16px;
-            border: none;
+            border: 1px solid #000;
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s;
+            background: #fff;
+            color: #000;
         }
         
-        .btn-accept {
-            background: #4caf50;
-            color: white;
-        }
-        
-        .btn-accept:hover {
-            background: #45a049;
-        }
-        
-        .btn-reject {
-            background: #f44336;
-            color: white;
-        }
-        
-        .btn-reject:hover {
-            background: #da190b;
+        .btn-accept:hover, .btn-reject:hover {
+            background: #000;
+            color: #fff;
         }
         
         .contact-info {
-            background: #e8f5e9;
-            border: 1px solid #4caf50;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
             border-radius: 8px;
             padding: 15px;
             margin-top: 15px;
@@ -175,7 +166,7 @@ include "php/session_check.php";
         
         .contact-info h4 {
             margin: 0 0 10px 0;
-            color: #2e7d32;
+            color: #000;
         }
         
         .contact-info p {
@@ -185,14 +176,14 @@ include "php/session_check.php";
         
         .contact-info i {
             margin-right: 8px;
-            color: #4caf50;
+            color: #000;
         }
     </style>
 </head>
 <body>
     <header>
         <i class='bx bxs-home-alt-2 bx-lg' onclick="window.location.href='index.php'"></i>
-        <i class='bx bx-log-out bx-lg' onclick="window.location.href='php/logout.php'" style="float: right; margin-right: 20px; cursor: pointer;"></i>
+        <i class='bx bx-log-out bx-lg' onclick="window.location.href='php/autenticacion.php?accion=cerrar_sesion'" style="float: right; margin-right: 20px; cursor: pointer;"></i>
     </header>
     
     <div class="dashboard-container">
@@ -201,9 +192,13 @@ include "php/session_check.php";
                 <h1>Panel del Empleador</h1>
                 <p>Bienvenido, <?php echo htmlspecialchars($_SESSION["user_name"] ?? "Usuario"); ?>!</p>
             </div>
-            <a href="form-jobs.html" style="background: white; color: #667eea; padding: 12px 24px; border-radius: 5px; text-decoration: none; font-weight: bold;">
+            <a href="form-jobs.html" style="background: white; color: #000; padding: 12px 24px; border: 1px solid #000; border-radius: 5px; text-decoration: none; font-weight: bold;">
                 <i class='bx bx-plus'></i> Publicar Trabajo
             </a>
+        </div>
+        <div style="background: #fff; border: 1px solid #000; border-radius: 10px; padding: 15px; margin-bottom: 20px;">
+            <p style="margin: 0 0 10px 0; font-weight: bold;">Guía rápida</p>
+            <p style="margin: 5px 0;">1) Publicá el trabajo. 2) Revisá solicitudes y asigná. 3) Coordiná y confirmá la finalización.</p>
         </div>
         
         <div class="dashboard-tabs">
@@ -237,7 +232,7 @@ include "php/session_check.php";
         
         async function loadMyJobs() {
             try {
-                const response = await fetch('php/get_employer_jobs.php', {
+                const response = await fetch('php/trabajos.php?accion=mis_trabajos_empleador', {
                     credentials: 'same-origin'
                 });
                 const data = await response.json();
@@ -272,23 +267,23 @@ include "php/session_check.php";
                                     <div>
                                         <span class="job-status ${statusClass}">${statusText}</span>
                                         ${parseInt(job.pending_responses) > 0 ? `<span class="responses-badge">${job.pending_responses} solicitudes</span>` : ''}
-                                        ${hasPendingCompletion ? `<span class="responses-badge" style="background: #ff9800;">⚠️ Pendiente Confirmación</span>` : ''}
-                                        ${isDisputed ? `<span class="responses-badge" style="background: #f44336;">⚠️ En Disputa</span>` : ''}
+                                        ${hasPendingCompletion ? `<span class="responses-badge">Pendiente de confirmación</span>` : ''}
+                                        ${isDisputed ? `<span class="responses-badge">En disputa</span>` : ''}
                                     </div>
                                 </div>
                                 <p>${job.description}</p>
                                 ${hasPendingCompletion ? `
-                                    <div style="background: #fff3e0; border: 1px solid #ff9800; border-radius: 8px; padding: 15px; margin-top: 15px;">
-                                        <h4 style="color: #f57c00; margin: 0 0 10px 0;">⏳ Esperando Tu Confirmación</h4>
+                                    <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-top: 15px;">
+                                        <h4 style="color: #000; margin: 0 0 10px 0;">Esperando tu confirmación</h4>
                                         <p style="margin: 5px 0;">El trabajador ha marcado este trabajo como completado. Por favor revisa y confirma.</p>
-                                        <button class="btn-accept" onclick="viewCompletionDetails(${job.id})" style="margin-top: 10px;">Ver Detalles y Confirmar</button>
+                                        <button class="btn-accept" onclick="viewCompletionDetails(${job.id})" style="margin-top: 10px;">Ver detalles y confirmar</button>
                                     </div>
                                 ` : ''}
                                 ${isDisputed ? `
-                                    <div style="background: #ffebee; border: 1px solid #f44336; border-radius: 8px; padding: 15px; margin-top: 15px;">
-                                        <h4 style="color: #c62828; margin: 0 0 10px 0;">⚠️ Proceso de Verificación</h4>
+                                    <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-top: 15px;">
+                                        <h4 style="color: #000; margin: 0 0 10px 0;">Proceso de verificación</h4>
                                         <p style="margin: 5px 0;">Hay una disputa sobre la finalización de este trabajo.</p>
-                                        <button class="btn-chat" onclick="viewDispute(${job.id})" style="margin-top: 10px; background: #f44336;">Ver Disputa</button>
+                                        <button class="btn-chat" onclick="viewDispute(${job.id})" style="margin-top: 10px;">Ver disputa</button>
                                     </div>
                                 ` : ''}
                                 ${parseInt(job.total_responses) > 0 ? `
@@ -308,19 +303,20 @@ include "php/session_check.php";
         
         async function viewResponses(taskId) {
             try {
-                const response = await fetch(`php/get_job_responses.php?task_id=${taskId}`, {
+                const response = await fetch(`php/trabajos.php?accion=solicitudes_por_trabajo&task_id=${taskId}`, {
                     credentials: 'same-origin'
                 });
                 const data = await response.json();
                 
                 if (data.success) {
                     const modal = document.createElement('div');
+                    modal.id = 'responsesModal';
                     modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; display: flex; align-items: center; justify-content: center;';
                     modal.innerHTML = `
                         <div style="background: white; padding: 30px; border-radius: 10px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                                 <h2>Solicitudes</h2>
-                                <button onclick="this.closest('div[style*=\"position: fixed\"]').remove()" style="background: #f44336; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Cerrar</button>
+                                <button onclick="closeResponsesModal()" style="background: #fff; color: #000; border: 1px solid #000; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Cerrar</button>
                             </div>
                             <div id="responses-modal-content">
                                 ${data.data.map(resp => {
@@ -350,7 +346,7 @@ include "php/session_check.php";
                                             ` : ''}
                                             ${resp.assignment_status === 'assigned' || resp.assignment_status === 'in_progress' ? `
                                                 <div class="contact-info">
-                                                    <h4>✅ Trabajador Asignado</h4>
+                                                    <h4>Trabajador asignado</h4>
                                                     <p><i class='bx bx-user'></i><strong>Nombre:</strong> ${resp.name} ${resp.last_name}</p>
                                                     <p><i class='bx bx-envelope'></i><strong>Email:</strong> <a href="mailto:${resp.email}" style="color: #2e7d32; text-decoration: none;">${resp.email}</a></p>
                                                     ${resp.phone_number ? `<p><i class='bx bx-phone'></i><strong>Teléfono:</strong> <a href="tel:${resp.phone_number}" style="color: #2e7d32; text-decoration: none;">${resp.phone_number}</a></p>` : ''}
@@ -363,11 +359,16 @@ include "php/session_check.php";
                         </div>
                     `;
                     document.body.appendChild(modal);
+                    modal.addEventListener('click', function(e) { if (e.target === modal) { closeResponsesModal(); } });
                 }
             } catch (error) {
                 console.error('Error:', error);
                 alert('Error al cargar las solicitudes');
             }
+        }
+        function closeResponsesModal() {
+            const modal = document.getElementById('responsesModal');
+            if (modal) modal.remove();
         }
         
         async function acceptResponse(responseId, taskId, workerId) {
@@ -381,7 +382,7 @@ include "php/session_check.php";
                 formData.append('task_id', taskId);
                 formData.append('worker_id', workerId);
                 
-                const response = await fetch('php/accept_job_response.php', {
+                const response = await fetch('php/trabajos.php?accion=aceptar_solicitud', {
                     method: 'POST',
                     body: formData,
                     credentials: 'same-origin',
@@ -414,7 +415,7 @@ include "php/session_check.php";
                 formData.append('response_id', responseId);
                 formData.append('task_id', taskId);
                 
-                const response = await fetch('php/reject_job_response.php', {
+                const response = await fetch('php/trabajos.php?accion=rechazar_solicitud', {
                     method: 'POST',
                     body: formData,
                     credentials: 'same-origin',
@@ -439,7 +440,7 @@ include "php/session_check.php";
         
         async function viewCompletionDetails(taskId) {
             try {
-                const response = await fetch(`php/get_job_responses.php?task_id=${taskId}`, {
+                const response = await fetch(`php/trabajos.php?accion=solicitudes_por_trabajo&task_id=${taskId}`, {
                     credentials: 'same-origin'
                 });
                 const data = await response.json();
@@ -464,8 +465,8 @@ include "php/session_check.php";
                                 </div>
                                 <div id="alert-completion" style="display: none; padding: 15px; margin: 15px 0; border-radius: 5px;"></div>
                                 <div style="display: flex; gap: 10px; justify-content: center;">
-                                    <button class="btn-accept" onclick="confirmCompletion(${taskId})">✅ Confirmar Completado</button>
-                                    <button class="btn-reject" onclick="showRejectForm(${taskId})">❌ Rechazar</button>
+                                    <button class="btn-accept" onclick="confirmCompletion(${taskId})">Confirmar completado</button>
+                                    <button class="btn-reject" onclick="showRejectForm(${taskId})">Rechazar</button>
                                 </div>
                                 <div id="reject-form-${taskId}" style="display: none; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
                                     <h4>Razón del rechazo:</h4>
@@ -488,7 +489,7 @@ include "php/session_check.php";
                 const formData = new FormData();
                 formData.append('task_id', taskId);
                 
-                const response = await fetch('php/confirm_completion.php', {
+                const response = await fetch('php/trabajos.php?accion=confirmar_finalizacion', {
                     method: 'POST',
                     body: formData,
                     credentials: 'same-origin',
@@ -528,7 +529,7 @@ include "php/session_check.php";
                 formData.append('task_id', taskId);
                 formData.append('reason', reason);
                 
-                const response = await fetch('php/reject_completion.php', {
+                const response = await fetch('php/trabajos.php?accion=rechazar_finalizacion', {
                     method: 'POST',
                     body: formData,
                     credentials: 'same-origin',
@@ -553,7 +554,7 @@ include "php/session_check.php";
         
         async function viewDispute(taskId) {
             try {
-                const response = await fetch(`php/get_dispute.php?task_id=${taskId}`, {
+                const response = await fetch(`php/trabajos.php?accion=ver_disputa&task_id=${taskId}`, {
                     credentials: 'same-origin'
                 });
                 const data = await response.json();
@@ -589,7 +590,7 @@ include "php/session_check.php";
                             <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #ddd;">
                                 <p><strong>¿Resolviste la disputa?</strong></p>
                                 <div style="display: flex; gap: 10px; margin-top: 10px;">
-                                    <button class="btn-accept" onclick="confirmCompletion(${taskId})">✅ Confirmar Finalización</button>
+                                    <button class="btn-accept" onclick="confirmCompletion(${taskId})">Confirmar finalización</button>
                                 </div>
                             </div>
                         </div>
@@ -617,7 +618,7 @@ include "php/session_check.php";
                 formData.append('task_id', taskId);
                 formData.append('message', message);
                 
-                const response = await fetch('php/add_dispute_message.php', {
+                const response = await fetch('php/trabajos.php?accion=agregar_mensaje_disputa', {
                     method: 'POST',
                     body: formData,
                     credentials: 'same-origin',

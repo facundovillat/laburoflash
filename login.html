@@ -52,7 +52,7 @@
                     }
 
                     try {
-                        const response = await fetch('php/login.php', {
+                        const response = await fetch('php/autenticacion.php?accion=iniciar_sesion', {
                             method: 'POST',
                             body: formData,
                             credentials: 'same-origin',
